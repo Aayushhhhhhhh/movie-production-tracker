@@ -88,7 +88,6 @@ def new_scene(name):
         "client_finalized": False,
         "client_changes_pre": 0,
         "client_changes_post": 0,
-        "internal_revisions_post": 0,
         "completion_override": None,  # None means auto-derived
         "notes": "",
         "updated_at": datetime.now().isoformat(timespec="seconds"),
@@ -257,7 +256,7 @@ elif page == "Act View":
                         st.rerun()
 
             with col2:
-                st.markdown("**Change / Revision Counters**")
+                st.markdown("**Client Change Counters**")
 
                 def counter_row(field, label):
                     c_a, c_b, c_c = st.columns([2, 1, 1])
@@ -275,7 +274,6 @@ elif page == "Act View":
 
                 counter_row("client_changes_pre", "Client changes (pre-post)")
                 counter_row("client_changes_post", "Client changes (post-post)")
-                counter_row("internal_revisions_post", "Internal revisions (post-post)")
 
                 st.markdown("**Completion % override**")
                 override_on = st.checkbox(
@@ -333,12 +331,9 @@ elif page == "Change Requests":
     else:
         total_pre = sum(s["client_changes_pre"] for _, s in all_scenes)
         total_post_client = sum(s["client_changes_post"] for _, s in all_scenes)
-        total_post_internal = sum(s["internal_revisions_post"] for _, s in all_scenes)
-
-        c1, c2, c3 = st.columns(3)
+        c1, c2 = st.columns(2)
         c1.metric("Total client changes (pre-post)", total_pre)
         c2.metric("Total client changes (post-post)", total_post_client)
-        c3.metric("Total internal revisions (post-post)", total_post_internal)
 
         st.subheader("Per-Act Rollup")
         act_rows = []
@@ -348,7 +343,6 @@ elif page == "Change Requests":
                 "Scenes": len(act["scenes"]),
                 "Client changes (pre-post)": sum(s["client_changes_pre"] for s in act["scenes"]),
                 "Client changes (post-post)": sum(s["client_changes_post"] for s in act["scenes"]),
-                "Internal revisions (post-post)": sum(s["internal_revisions_post"] for s in act["scenes"]),
             })
         st.dataframe(act_rows, use_container_width=True, hide_index=True)
 
@@ -357,14 +351,13 @@ elif page == "Change Requests":
 
         rows = []
         for act, s in all_scenes:
-            total_changes = s["client_changes_pre"] + s["client_changes_post"] + s["internal_revisions_post"]
+            total_changes = s["client_changes_pre"] + s["client_changes_post"]
             rows.append({
                 "Act": act["number"],
                 "Scene": s["name"],
                 "Status": s["status"],
                 "Client changes (pre-post)": s["client_changes_pre"],
                 "Client changes (post-post)": s["client_changes_post"],
-                "Internal revisions (post-post)": s["internal_revisions_post"],
                 "Total": total_changes,
             })
         rows.sort(key=lambda r: r["Total"], reverse=True)
