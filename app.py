@@ -118,15 +118,7 @@ def touch(scene):
 
 data = st.session_state.data
 
-top_l, top_r = st.columns([5, 1])
-with top_l:
-    st.title("🎬 Movie Production Tracker")
-with top_r:
-    st.write("")
-    if st.button("💾 Save now"):
-        save_data()
-        st.success("Saved.")
-st.caption(f"Data file: `{os.path.basename(DATA_FILE)}` (auto-saved on every change)")
+st.title("🎬 Movie Production Tracker")
 
 tab_overview, tab_act, tab_changes, tab_data = st.tabs(["Project Overview", "Act View", "Change Requests", "Data"])
 
