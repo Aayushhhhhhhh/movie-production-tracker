@@ -113,18 +113,20 @@ def touch(scene):
 
 
 # ---------------------------------------------------------------------------
-# Sidebar: navigation + quick add
+# Top navigation (tabs)
 # ---------------------------------------------------------------------------
 
 data = st.session_state.data
 
-st.title("🎬 Movie Production Tracker")
-
-with st.sidebar:
-    st.caption(f"Data file: `{os.path.basename(DATA_FILE)}` (auto-saved)")
-    if st.button("💾 Force save now"):
+top_l, top_r = st.columns([5, 1])
+with top_l:
+    st.title("🎬 Movie Production Tracker")
+with top_r:
+    st.write("")
+    if st.button("💾 Save now"):
         save_data()
         st.success("Saved.")
+st.caption(f"Data file: `{os.path.basename(DATA_FILE)}` (auto-saved on every change)")
 
 tab_overview, tab_act, tab_changes = st.tabs(["Project Overview", "Act View", "Change Requests"])
 
@@ -133,7 +135,7 @@ tab_overview, tab_act, tab_changes = st.tabs(["Project Overview", "Act View", "C
 # ---------------------------------------------------------------------------
 
 with tab_overview:
-    st.title("Project Overview")
+    st.header("Project Overview")
 
     all_scenes = [s for a in data["acts"] for s in a["scenes"]]
     total_scenes = len(all_scenes)
@@ -175,7 +177,7 @@ with tab_overview:
 # ---------------------------------------------------------------------------
 
 with tab_act:
-    st.title("Act View")
+    st.header("Act View")
 
     act_labels = [f"Act {a['number']} — {a['name']}" for a in sorted(data["acts"], key=lambda a: a["number"])]
     sorted_acts = sorted(data["acts"], key=lambda a: a["number"])
@@ -297,7 +299,7 @@ with tab_act:
 # ---------------------------------------------------------------------------
 
 with tab_changes:
-    st.title("Change-Request Tracking")
+    st.header("Change-Request Tracking")
 
     all_scenes = []
     for act in data["acts"]:
