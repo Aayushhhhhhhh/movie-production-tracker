@@ -118,20 +118,21 @@ def touch(scene):
 
 data = st.session_state.data
 
-st.sidebar.title("🎬 Production Tracker")
-page = st.sidebar.radio("View", ["Project Overview", "Act View", "Change Requests"])
+st.title("🎬 Movie Production Tracker")
 
-st.sidebar.divider()
-st.sidebar.caption(f"Data file: `{os.path.basename(DATA_FILE)}` (auto-saved)")
-if st.sidebar.button("💾 Force save now"):
-    save_data()
-    st.sidebar.success("Saved.")
+with st.sidebar:
+    st.caption(f"Data file: `{os.path.basename(DATA_FILE)}` (auto-saved)")
+    if st.button("💾 Force save now"):
+        save_data()
+        st.success("Saved.")
+
+tab_overview, tab_act, tab_changes = st.tabs(["Project Overview", "Act View", "Change Requests"])
 
 # ---------------------------------------------------------------------------
 # Page: Project Overview
 # ---------------------------------------------------------------------------
 
-if page == "Project Overview":
+with tab_overview:
     st.title("Project Overview")
 
     all_scenes = [s for a in data["acts"] for s in a["scenes"]]
@@ -173,7 +174,7 @@ if page == "Project Overview":
 # Page: Act View
 # ---------------------------------------------------------------------------
 
-elif page == "Act View":
+with tab_act:
     st.title("Act View")
 
     act_labels = [f"Act {a['number']} — {a['name']}" for a in sorted(data["acts"], key=lambda a: a["number"])]
@@ -295,7 +296,7 @@ elif page == "Act View":
 # Page: Change Requests
 # ---------------------------------------------------------------------------
 
-elif page == "Change Requests":
+with tab_changes:
     st.title("Change-Request Tracking")
 
     all_scenes = []
