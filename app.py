@@ -239,14 +239,18 @@ with tab_act:
                 st.markdown("**Client Change Counters**")
 
                 def counter_row(field, label):
-                    c_a, c_b, c_c = st.columns([2, 1, 1])
-                    c_a.write(f"{label}: **{scene[field]}**")
-                    if c_b.button("➖", key=f"dec_{field}_{scene['id']}"):
+                    c_label, c_minus, c_count, c_plus = st.columns([3, 1, 1, 1])
+                    c_label.write(label)
+                    if c_minus.button("➖", key=f"dec_{field}_{scene['id']}", use_container_width=True):
                         scene[field] = max(0, scene[field] - 1)
                         touch(scene)
                         save_data()
                         st.rerun()
-                    if c_c.button("➕", key=f"inc_{field}_{scene['id']}"):
+                    c_count.markdown(
+                        f"<div style='text-align:center;font-weight:600;padding-top:6px'>{scene[field]}</div>",
+                        unsafe_allow_html=True,
+                    )
+                    if c_plus.button("➕", key=f"inc_{field}_{scene['id']}", use_container_width=True):
                         scene[field] += 1
                         touch(scene)
                         save_data()
