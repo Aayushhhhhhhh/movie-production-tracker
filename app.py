@@ -128,7 +128,7 @@ with top_r:
         st.success("Saved.")
 st.caption(f"Data file: `{os.path.basename(DATA_FILE)}` (auto-saved on every change)")
 
-tab_overview, tab_act, tab_changes = st.tabs(["Project Overview", "Act View", "Change Requests"])
+tab_overview, tab_act, tab_changes, tab_data = st.tabs(["Project Overview", "Act View", "Change Requests", "Data"])
 
 # ---------------------------------------------------------------------------
 # Page: Project Overview
@@ -353,3 +353,25 @@ with tab_changes:
 
         st.subheader("All scenes")
         st.dataframe(rows, use_container_width=True, hide_index=True)
+
+# ---------------------------------------------------------------------------
+# Page: Data
+# ---------------------------------------------------------------------------
+
+with tab_data:
+    st.header("Raw Data")
+    st.caption(
+        "This is the exact content of `tracker_data.json`, the file the app "
+        "reads from and writes to on every change."
+    )
+
+    json_str = json.dumps(data, indent=2)
+
+    st.download_button(
+        label="⬇️ Download tracker_data.json",
+        data=json_str,
+        file_name="tracker_data.json",
+        mime="application/json",
+    )
+
+    st.code(json_str, language="json")
