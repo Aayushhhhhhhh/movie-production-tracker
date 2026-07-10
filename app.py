@@ -81,11 +81,6 @@ def new_scene(name):
         "id": str(uuid.uuid4()),
         "name": name,
         "status": "Not Started",
-        "team_working": False,
-        "video_generated": False,
-        "sent_to_post": False,
-        "post_complete": False,
-        "client_finalized": False,
         "client_changes_pre": 0,
         "client_changes_post": 0,
         "completion_override": None,  # None means auto-derived
@@ -143,12 +138,10 @@ if page == "Project Overview":
     total_scenes = len(all_scenes)
     proj_pct = project_completion(data)
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3 = st.columns(3)
     c1.metric("Overall Completion", f"{proj_pct}%")
     c2.metric("Total Scenes", total_scenes)
     c3.metric("Total Acts", len(data["acts"]))
-    active = sum(1 for s in all_scenes if s["team_working"])
-    c4.metric("Scenes Actively Worked On", active)
 
     st.progress(proj_pct / 100)
 
@@ -238,22 +231,6 @@ elif page == "Act View":
                     touch(scene)
                     save_data()
                     st.rerun()
-
-                st.markdown("**Flags**")
-                flags = [
-                    ("team_working", "Team currently working"),
-                    ("video_generated", "Video generated"),
-                    ("sent_to_post", "Sent to post-production"),
-                    ("post_complete", "Post-production completed"),
-                    ("client_finalized", "Client finalized"),
-                ]
-                for key, label in flags:
-                    val = st.checkbox(label, value=scene[key], key=f"{key}_{scene['id']}")
-                    if val != scene[key]:
-                        scene[key] = val
-                        touch(scene)
-                        save_data()
-                        st.rerun()
 
             with col2:
                 st.markdown("**Client Change Counters**")
